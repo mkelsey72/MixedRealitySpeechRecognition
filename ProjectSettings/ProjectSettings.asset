@@ -137,8 +137,10 @@ PlayerSettings:
   bundleVersion: 0.1
   preloadedAssets:
   - {fileID: 0}
-  - {fileID: 114235678976253850, guid: 6808188db8833314194013d112672c5c, type: 2}
-  - {fileID: -4040432903435710212, guid: 39c2b652e584fbb47a4fb941de19b773, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -725,11 +727,11 @@ PlayerSettings:
   m_MobileRenderingPath: 1
   metroPackageName: MR-Speech
   metroPackageVersion: 1.0.0.0
-  metroCertificatePath: 
+  metroCertificatePath: Assets\WSATestCertificate.pfx
   metroCertificatePassword: 
-  metroCertificateSubject: 
-  metroCertificateIssuer: 
-  metroCertificateNotAfter: 0000000000000000
+  metroCertificateSubject: SFA
+  metroCertificateIssuer: SFA
+  metroCertificateNotAfter: 8013f6963fa6d901
   metroApplicationDescription: Template_3D
   wsaImages: {}
   metroTileShortName: MRS
