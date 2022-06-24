@@ -13,10 +13,12 @@ using System.Threading.Tasks;
 using System.Globalization;
 using System;
 using System.Diagnostics;
+using TMPro;
 #if PLATFORM_ANDROID
 using UnityEngine.Android;
 #endif
 using Debug = UnityEngine.Debug;
+
 
 /// <summary>
 /// SpeechRecognition class lets the user use Speech-to-Text to convert spoken words
@@ -32,6 +34,9 @@ public class SpeechRecognition : MonoBehaviour
     public Text RecognizedText;
     [Tooltip("Unity UI Text component used to post recognition results on screen.")]
     public Text ErrorText;
+
+    [Tooltip("Text Mesh Pro - where subtitles appears")]
+    public TextMeshProUGUI ResultText;
 
     // Dropdown lists used to select translation languages, if enabled
     public Toggle TranslationEnabled;
@@ -392,6 +397,8 @@ public class SpeechRecognition : MonoBehaviour
         {
             RecognizedText.text = recognizedString;
             ErrorText.text = errorString;
+            if (ResultText != null)
+                ResultText.text = recognizedString;
         }
     }
 
