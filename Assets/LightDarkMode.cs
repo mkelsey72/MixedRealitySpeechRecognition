@@ -5,7 +5,7 @@ using TMPro;
 
 public class LightDarkMode : MonoBehaviour
 {
-    private static Color DARK_COLOR = new Color(.2f,.2f,.2f,1); //new Color(35.00f/255.0f, 35.00f/255.00f, 35.00f/255.00f);
+    private static Color DARK_COLOR = Color.black; //new Color(35.00f/255.0f, 35.00f/255.00f, 35.00f/255.00f);
     private static Color LIGHT_COLOR = Color.white;
 
     private TextMeshProUGUI subtitleText;
@@ -14,7 +14,7 @@ public class LightDarkMode : MonoBehaviour
     void Start()
     {
         this.subtitleText = this.GetComponent<TextMeshProUGUI>();
-        this.subtitleText.color = Color.white;
+        //this.subtitleText.color = Color.white;
     }
 
     public void changeColor()
@@ -23,6 +23,7 @@ public class LightDarkMode : MonoBehaviour
         {
             subtitleText.faceColor = DARK_COLOR;
             subtitleText.color = DARK_COLOR;
+            //subtitleText.alpha = 1;
         }
         else
         {
