@@ -6919,7 +6919,6 @@ MonoBehaviour:
     If you are demoing this
     app, choose "No".
 
-
     Thanks, have fun :).'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6a84f857bec7e7345843ae29404c57ce, type: 2}
@@ -7054,7 +7053,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7468319300261268800}
   - component: {fileID: 5367231812802049776}
-  - component: {fileID: 1592325853309664844}
   - component: {fileID: 3793907823843958125}
   - component: {fileID: 159000554947486546}
   m_Layer: 0
@@ -7686,14 +7684,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!33 &1592325853309664844
-MeshFilter:
-  m_ObjectHideFlags: 59
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 190946822489003049}
-  m_Mesh: {fileID: 0}
 --- !u!1 &1702385101283700228
 GameObject:
   m_ObjectHideFlags: 0
@@ -10056,14 +10046,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &5101660660377235629
-MeshFilter:
-  m_ObjectHideFlags: 59
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6961661645609264944}
-  m_Mesh: {fileID: 0}
 --- !u!23 &5191910218204353667
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -10224,7 +10206,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5644955398520591064}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.6}
+  m_LocalPosition: {x: 0.02, y: 0.08, z: 0.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -10836,7 +10818,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7437779592750262934}
   - component: {fileID: 2551617730971167771}
-  - component: {fileID: 5101660660377235629}
   - component: {fileID: 7074184669357459068}
   - component: {fileID: 951009076564436747}
   m_Layer: 0
