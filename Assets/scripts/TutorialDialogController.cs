@@ -2,11 +2,13 @@
 using Microsoft.MixedReality.Toolkit.UI;
 using UnityEngine;
 
-public class disableCanvas : MonoBehaviour
+public class TutorialDialogController : MonoBehaviour
 {
     [SerializeField] GameObject DialogTutorial, DialogDocSes;
 
-    public void OnOKBtnClick()
+    //Deactivates tutorial dialog box
+    //Activates record session dialog box
+    public void OnTutorialOKBtnClick()
     {
         DialogTutorial.SetActive(false);
         DialogDocSes.SetActive(true);

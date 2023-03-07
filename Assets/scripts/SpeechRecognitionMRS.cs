@@ -2,17 +2,20 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 //
-using System.Collections;
-using System.Collections.Generic;
+
+
+//using System.Collections;
+//using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.IO;
 using Microsoft.CognitiveServices.Speech;
-using Microsoft.CognitiveServices.Speech.Audio;
+//using Microsoft.CognitiveServices.Speech.Audio;
 using Microsoft.CognitiveServices.Speech.Translation;
-using System.Threading.Tasks;
-using System.Globalization;
+//using System.Threading.Tasks;
+//using System.Globalization;
 using System;
-using System.Diagnostics;
+//using System.Diagnostics;
 using TMPro;
 #if PLATFORM_ANDROID
 using UnityEngine.Android;
@@ -27,7 +30,7 @@ using Debug = UnityEngine.Debug;
 /// results (i.e. recognition hypotheses) that are returned in near real-time as the 
 /// speaks in the microphone.
 /// </summary>
-public class SpeechRecognition : MonoBehaviour
+public class SpeechRecognitionMRS : MonoBehaviour
 {
     // Public fields in the Unity inspector
     [Tooltip("Unity UI Text component used to report potential errors on screen.")]
@@ -37,6 +40,12 @@ public class SpeechRecognition : MonoBehaviour
 
     [Tooltip("Text Mesh Pro - where subtitles appears")]
     public TextMeshProUGUI ResultText;
+
+    [Tooltip("Indicates if session should be documented or not.")]
+    public static bool recordSession;
+
+    [Tooltip("Streamwriter object used below to document sessions.")]
+    StreamWriter sw;
 
     // Dropdown lists used to select translation languages, if enabled
     public Toggle TranslationEnabled;
@@ -58,8 +67,6 @@ public class SpeechRecognition : MonoBehaviour
     public string SpeechServiceAPIKey = string.Empty;
     [Tooltip("Region for your Cognitive Services Speech instance (must match the key).")]
     public string SpeechServiceRegion = "westus";
-
-    public static bool recordSession;
 
     // Cognitive Services Speech objects used for Speech Recognition
     private SpeechRecognizer recognizer;
@@ -164,6 +171,18 @@ public class SpeechRecognition : MonoBehaviour
             }
         }
         Debug.Log("CreateSpeechRecognizer exit");
+
+        //Creating a file, or opening a file if it already exists, to store result strings and document session
+        if (recordSession)
+        {
+            string path = @"c:\Documents\Session.txt";
+            sw = File.CreateText(path);
+            //below might be causing inf loop? shouldn't, but.
+            //using (sw = File.CreateText(path))
+            //{            
+            sw.WriteLine("\n --------- Beginning of Session --------- \n");
+            //}
+        }
     }
 
     /// <summary>
@@ -230,6 +249,8 @@ public class SpeechRecognition : MonoBehaviour
             lock (threadLocker)
             {
                 recognizedString = $"RESULT: {Environment.NewLine}{e.Result.Text}";
+
+                sw.Write(e.Result.Text);
             }
         }
         else if (e.Result.Reason == ResultReason.NoMatch)
@@ -444,6 +465,12 @@ public class SpeechRecognition : MonoBehaviour
             translator = null;
             recognizedString = "Speech Translator is now stopped.";
             Debug.Log("Speech Translator is now stopped.");
+        }
+
+        if (recordSession)
+        {
+            sw.WriteLine("\n ------ End of Session ------ \n");
+            sw.Close();
         }
     }
 }
