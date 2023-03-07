@@ -2,17 +2,20 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 //
-using System.Collections;
-using System.Collections.Generic;
+
+
+//using System.Collections;
+//using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.IO;
 using Microsoft.CognitiveServices.Speech;
-using Microsoft.CognitiveServices.Speech.Audio;
+//using Microsoft.CognitiveServices.Speech.Audio;
 using Microsoft.CognitiveServices.Speech.Translation;
-using System.Threading.Tasks;
-using System.Globalization;
+//using System.Threading.Tasks;
+//using System.Globalization;
 using System;
-using System.Diagnostics;
+//using System.Diagnostics;
 using TMPro;
 #if PLATFORM_ANDROID
 using UnityEngine.Android;
@@ -38,6 +41,12 @@ public class SpeechRecognition : MonoBehaviour
     [Tooltip("Text Mesh Pro - where subtitles appears")]
     public TextMeshProUGUI ResultText;
 
+    [Tooltip("Indicates if session should be documented or not.")]
+    public static bool recordSession;
+
+    [Tooltip("Streamwriter object used below to document sessions.")]
+    StreamWriter sw;
+
     // Dropdown lists used to select translation languages, if enabled
     public Toggle TranslationEnabled;
     [Tooltip("Target language #1 for translation (if enabled).")]
@@ -58,8 +67,6 @@ public class SpeechRecognition : MonoBehaviour
     public string SpeechServiceAPIKey = string.Empty;
     [Tooltip("Region for your Cognitive Services Speech instance (must match the key).")]
     public string SpeechServiceRegion = "westus";
-
-    public static bool recordSession;
 
     // Cognitive Services Speech objects used for Speech Recognition
     private SpeechRecognizer recognizer;
@@ -181,11 +188,23 @@ public class SpeechRecognition : MonoBehaviour
 
             recognizedString = "Speech Recognizer is now running.";
             Debug.Log("Speech Recognizer is now running.");
+
+            //Creating a file, or opening a file if it already exists, to store result strings and document session
+            if (recordSession)
+            {
+                string path = @"c:\Documents\Session.txt";
+                sw = File.CreateText(path);
+                //below might be causing inf loop? shouldn't, but.
+                //using (sw = File.CreateText(path))
+                //{            
+                sw.WriteLine("\n --------- Beginning of Session --------- \n");
+                //}
+            }
         }
         Debug.Log("Start Continuous Speech Recognition exit");
     }
 
-#region Speech Recognition event handlers
+    #region Speech Recognition event handlers
     private void SessionStartedHandler(object sender, SessionEventArgs e)
     {
         Debug.Log($"\n    Session started event. Event: {e.ToString()}.");
@@ -230,6 +249,8 @@ public class SpeechRecognition : MonoBehaviour
             lock (threadLocker)
             {
                 recognizedString = $"RESULT: {Environment.NewLine}{e.Result.Text}";
+
+                sw.Write(e.Result.Text);
             }
         }
         else if (e.Result.Reason == ResultReason.NoMatch)
@@ -319,7 +340,7 @@ public class SpeechRecognition : MonoBehaviour
         Debug.Log("Start Continuous Speech Translation exit");
     }
 
-#region Speech Translation event handlers
+    #region Speech Translation event handlers
     // "Recognizing" events are fired every time we receive interim results during recognition (i.e. hypotheses)
     private void RecognizingTranslationHandler(object sender, TranslationRecognitionEventArgs e)
     {
@@ -381,7 +402,7 @@ public class SpeechRecognition : MonoBehaviour
             Debug.LogError($"CANCELED: Did you update the subscription info?");
         }
     }
-#endregion
+    #endregion
 
     /// <summary>
     /// Main update loop: Runs every frame
@@ -444,6 +465,12 @@ public class SpeechRecognition : MonoBehaviour
             translator = null;
             recognizedString = "Speech Translator is now stopped.";
             Debug.Log("Speech Translator is now stopped.");
+        }
+
+        if (recordSession)
+        {
+            sw.WriteLine("\n ------ End of Session ------ \n");
+            sw.Close();
         }
     }
 }
