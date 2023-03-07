@@ -123,6 +123,50 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &73250198
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 73250199}
+  - component: {fileID: 73250200}
+  m_Layer: 0
+  m_Name: DialogueController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &73250199
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 73250198}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 840992359}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &73250200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 73250198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6c035d640760734fa3e5eb2283f8faa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &92879796
 GameObject:
   m_ObjectHideFlags: 0
@@ -1894,7 +1938,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 73250199}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5002,6 +5047,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HandMenu_Small_HideOnHandDrop
       objectReference: {fileID: 0}
+    - target: {fileID: 4650336336052702775, guid: 184450d7fd18e3742b0612f6901efe5e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4650336336337354715, guid: 184450d7fd18e3742b0612f6901efe5e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -7053,7 +7102,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7468319300261268800}
   - component: {fileID: 5367231812802049776}
-  - component: {fileID: 3793907823843958125}
   - component: {fileID: 159000554947486546}
   m_Layer: 0
   m_Name: DescriptionText
@@ -7376,14 +7424,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6480513508047752353}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
---- !u!222 &669058746789773028
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 862648762350509992}
-  m_CullTransparentMesh: 0
 --- !u!114 &670727987501566081
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7422,7 +7462,6 @@ GameObject:
   m_Component:
   - component: {fileID: 890649750323466766}
   - component: {fileID: 5191910218204353667}
-  - component: {fileID: 669058746789773028}
   - component: {fileID: 7374325171309436819}
   m_Layer: 0
   m_Name: TitleText
@@ -7984,6 +8023,7 @@ GameObject:
   - component: {fileID: 54423068439326347}
   - component: {fileID: 8560875608702000154}
   - component: {fileID: 9120925994266389201}
+  - component: {fileID: 9120925994266389202}
   m_Layer: 0
   m_Name: BtnNo
   m_TagString: Untagged
@@ -8562,6 +8602,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 9120925994266389202}
+        m_TargetAssemblyTypeName: DocSesDialogController, Assembly-CSharp
+        m_MethodName: OnRecSesNoClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   movingButtonIconText: {fileID: 8004691852803590179}
   compressableButtonVisuals: {fileID: 3959207565690922963}
   minCompressPercentage: 0.25
@@ -8882,7 +8934,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2680377478692416067
 Transform:
   m_ObjectHideFlags: 0
@@ -9078,14 +9130,6 @@ MonoBehaviour:
   additionalOffset: {x: 0, y: 0, z: 0}
   additionalRotation: {x: 0, y: 0, z: 0}
   updateSolvers: 1
---- !u!222 &3793907823843958125
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 190946822489003049}
-  m_CullTransparentMesh: 0
 --- !u!1 &3959207565690922963
 GameObject:
   m_ObjectHideFlags: 0
@@ -9165,7 +9209,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buttonText: {fileID: 4444238603722321412}
-  ButtonTypeEnum: 0
+  ButtonTypeEnum: 64
 --- !u!4 &4310062580607756969
 Transform:
   m_ObjectHideFlags: 0
@@ -9265,6 +9309,7 @@ GameObject:
   - component: {fileID: 2418610060126906204}
   - component: {fileID: 6313958120567100877}
   - component: {fileID: 4294404470019251640}
+  - component: {fileID: 6552196479949623640}
   m_Layer: 0
   m_Name: ButtonOne
   m_TagString: Untagged
@@ -9460,14 +9505,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 4444238603722321531}
   m_maskType: 0
---- !u!222 &4444238603722321413
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4444238603722321414}
-  m_CullTransparentMesh: 0
 --- !u!1 &4444238603722321414
 GameObject:
   m_ObjectHideFlags: 0
@@ -9478,7 +9515,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4444238603722321415}
   - component: {fileID: 4444238603722321531}
-  - component: {fileID: 4444238603722321413}
   - component: {fileID: 4444238603722321412}
   m_Layer: 0
   m_Name: TextMeshPro
@@ -9886,6 +9922,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 8300000, guid: 40ae713ddf420714bbc1a3b5c3f2eac1, type: 3}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 6552196479949623640}
+        m_TargetAssemblyTypeName: TutorialDialogController, Assembly-CSharp
+        m_MethodName: OnTutorialOKBtnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -10400,9 +10448,6 @@ MonoBehaviour:
   voiceCommand: Select
   voiceRequiresFocus: 1
   profiles:
-  - Target: {fileID: 0}
-    Themes:
-    - {fileID: 11400000, guid: 0c4c73f326f602744bdcfff481fd6f20, type: 2}
   - Target: {fileID: 4444238604880425076}
     Themes:
     - {fileID: 11400000, guid: 8f8cfb3041153fa45bccb6d664a563ec, type: 2}
@@ -10579,6 +10624,20 @@ MonoBehaviour:
       - Far Only
   resetOnDestroy: 0
   enabledOnStart: 1
+--- !u!114 &6552196479949623640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4444238603101863924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b202a4e3219fa4e43ad4d3823fc7564f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DialogTutorial: {fileID: 5644955398520591064}
+  DialogDocSes: {fileID: 2680377478692416064}
 --- !u!114 &6561822901726216222
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10781,14 +10840,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7071552161291018746}
   m_Mesh: {fileID: 0}
---- !u!222 &6900322821082064373
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7620676630039964849}
-  m_CullTransparentMesh: 0
 --- !u!114 &6916976882062656406
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10818,7 +10869,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7437779592750262934}
   - component: {fileID: 2551617730971167771}
-  - component: {fileID: 7074184669357459068}
   - component: {fileID: 951009076564436747}
   m_Layer: 0
   m_Name: TitleText
@@ -10932,6 +10982,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 9169867538419759633}
+        m_TargetAssemblyTypeName: DocSesDialogController, Assembly-CSharp
+        m_MethodName: OnRecSesYesClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   movingButtonIconText: {fileID: 1195371842183814328}
   compressableButtonVisuals: {fileID: 5292115228145185608}
   minCompressPercentage: 0.25
@@ -10976,14 +11038,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!222 &7074184669357459068
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6961661645609264944}
-  m_CullTransparentMesh: 0
 --- !u!33 &7087985057548151349
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -11265,6 +11319,7 @@ GameObject:
   - component: {fileID: 9169867538419759632}
   - component: {fileID: 670727987501566081}
   - component: {fileID: 7349722834323898415}
+  - component: {fileID: 9169867538419759633}
   m_Layer: 0
   m_Name: BtnYes
   m_TagString: Untagged
@@ -11925,7 +11980,6 @@ GameObject:
   m_Component:
   - component: {fileID: 918937523140507096}
   - component: {fileID: 2384736261973249640}
-  - component: {fileID: 6900322821082064373}
   - component: {fileID: 7588730516839947210}
   m_Layer: 0
   m_Name: DescriptionText
@@ -12624,6 +12678,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buttonText: {fileID: 2088793923414075347}
   ButtonTypeEnum: 0
+--- !u!114 &9120925994266389202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2088793922826647075}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ffff41cbbeca654a94144c28db1af95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DialogDocSes: {fileID: 2680377478692416064}
+  Panel: {fileID: 1440984568}
 --- !u!33 &9146640020455935565
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -12659,3 +12727,17 @@ MonoBehaviour:
   localCenter: {x: 0, y: 0, z: -0.008}
   bounds: {x: 0.09607224, y: 0.032}
   touchableCollider: {fileID: 7168696579407159972}
+--- !u!114 &9169867538419759633
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7168696579407159992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ffff41cbbeca654a94144c28db1af95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DialogDocSes: {fileID: 2680377478692416064}
+  Panel: {fileID: 1440984568}
