@@ -17,6 +17,7 @@ using Microsoft.CognitiveServices.Speech.Translation;
 using System;
 //using System.Diagnostics;
 using TMPro;
+using System.Collections.Generic;
 #if PLATFORM_ANDROID
 using UnityEngine.Android;
 #endif
@@ -49,12 +50,11 @@ public class SpeechRecognition : MonoBehaviour
 
     // Dropdown lists used to select translation languages, if enabled
     public Toggle TranslationEnabled;
+
     [Tooltip("Target language #1 for translation (if enabled).")]
-    public Dropdown Languages1;
-    [Tooltip("Target language #2 for translation (if enabled).")]
-    public Dropdown Languages2;
-    [Tooltip("Target language #3 for translation (if enabled).")]
-    public Dropdown Languages3;
+    public TMP_Dropdown LanguageDropdown;
+
+    //public GameObject TranslationMenu;
 
     // Used to show live messages on screen, must be locked to avoid threading deadlocks since
     // the recognition events are raised in a separate thread
@@ -75,6 +75,7 @@ public class SpeechRecognition : MonoBehaviour
     // to another region & language code to use a different origin language.
     // e.g. fr-fr, es-es, etc.
     string fromLanguage = "en-us";
+    string defaultLanguage = "en_English";
 
     private bool micPermissionGranted = false;
 #if PLATFORM_ANDROID
@@ -85,14 +86,7 @@ public class SpeechRecognition : MonoBehaviour
 
     private void Awake()
     {
-        // IMPORTANT INFO BEFORE YOU CAN USE THIS SAMPLE:
-        // Get your own Cognitive Services Speech subscription key for free at the following
-        // link: https://docs.microsoft.com/azure/cognitive-services/speech-service/get-started.
-        // Use the inspector fields to manually set these values with your subscription info.
-        // If you prefer to manually set your Speech Service API Key and Region in code,
-        // then uncomment the two lines below and set the values to your own.
-        //SpeechServiceAPIKey = "YourSubscriptionKey";
-        //SpeechServiceRegion = "YourServiceRegion";
+
     }
 
     private void Start()
@@ -159,7 +153,7 @@ public class SpeechRecognition : MonoBehaviour
             recognizer = new SpeechRecognizer(config);
 
             if (recognizer != null)
-            {
+            {               
                 // Subscribes to speech events.
                 recognizer.Recognizing += RecognizingHandler;
                 recognizer.Recognized += RecognizedHandler;
@@ -171,6 +165,17 @@ public class SpeechRecognition : MonoBehaviour
             }
         }
         Debug.Log("CreateSpeechRecognizer exit");
+
+        if (recordSession)
+        {
+            string path = @"C:\Documents\Session.txt";
+            sw = File.CreateText(path);
+            //below might be causing inf loop? shouldn't, but.
+            //using (sw = File.CreateText(path))
+            //{            
+            sw.WriteLine("\n --------- Beginning of Session --------- \n");
+            //}
+        }
     }
 
     /// <summary>
@@ -274,6 +279,21 @@ public class SpeechRecognition : MonoBehaviour
     }
     #endregion
 
+    public void changeTargetLanguage()
+    {
+        SpeechTranslationConfig config = SpeechTranslationConfig.FromSubscription(SpeechServiceAPIKey, SpeechServiceRegion);
+        //Assuming the first option is selected by default, so it should never be null.
+        //get the selected index
+        int menuIndex = LanguageDropdown.GetComponent<Dropdown>().value;
+
+        //get all options available wit$$anonymous$$n t$$anonymous$$s dropdown menu
+        List<Dropdown.OptionData> menuOptions = LanguageDropdown.GetComponent<Dropdown>().options;
+
+        //get the string value of the selected index
+        string value = menuOptions[menuIndex].text;
+
+        config.AddTargetLanguage(ExtractLanguageCode(value));
+    }
     /// <summary>
     /// Creates a class-level Translation Recognizer for a specific language using Azure credentials
     /// and hooks-up lifecycle & recognition events. Translation can be enabled with one or more target
@@ -285,19 +305,41 @@ public class SpeechRecognition : MonoBehaviour
         recognizedString = "Initializing speech recognition with translation, please wait...";
 
         if (translator == null)
-        {
+        {   
             SpeechTranslationConfig config = SpeechTranslationConfig.FromSubscription(SpeechServiceAPIKey, SpeechServiceRegion);
             config.SpeechRecognitionLanguage = fromLanguage;
-            if (Languages1.captionText.text.Length > 0)
-                config.AddTargetLanguage(ExtractLanguageCode(Languages1.captionText.text));
-            if (Languages2.captionText.text.Length > 0)
-                config.AddTargetLanguage(ExtractLanguageCode(Languages2.captionText.text));
-            if (Languages3.captionText.text.Length > 0)
-                config.AddTargetLanguage(ExtractLanguageCode(Languages3.captionText.text));
+
+            //Assuming the first option is selected by default, so it should never be null.
+            //get the selected index
+            int menuIndex = LanguageDropdown.GetComponent<Dropdown>().value;
+
+            //get all options available wit$$anonymous$$n t$$anonymous$$s dropdown menu
+            List<Dropdown.OptionData> menuOptions = LanguageDropdown.GetComponent<Dropdown>().options;
+
+            //get the string value of the selected index
+            string value = menuOptions[menuIndex].text;
+
+            recognizedString = "the language selected is: " + value;
+            config.AddTargetLanguage(ExtractLanguageCode(value));
+
+
+            /* Commenting out because we are assuming the first selection will be selected (en_English)
+            if (LanguageDropdown.captionText.text.Length > 0)
+            {
+                recognizedString = LanguageDropdown.captionText.text;
+                config.AddTargetLanguage(ExtractLanguageCode(LanguageDropdown.captionText.text));
+            }
+            else
+            {
+                config.AddTargetLanguage(ExtractLanguageCode(defaultLanguage));
+            }
+            */
+
             translator = new TranslationRecognizer(config);
 
             if (translator != null)
             {
+                recognizedString = "translator was created";
                 translator.Recognizing += RecognizingTranslationHandler;
                 translator.Recognized += RecognizedTranslationHandler;
                 translator.SpeechStartDetected += SpeechStartDetectedHandler;
@@ -308,6 +350,7 @@ public class SpeechRecognition : MonoBehaviour
             }
         }
         Debug.Log("CreateTranslationRecognizer exit");
+        recognizedString = "CreateTranslationRecognizer exit";
     }
 
     /// <summary>
@@ -332,6 +375,7 @@ public class SpeechRecognition : MonoBehaviour
         if (translator != null)
         {
             Debug.Log("Starting Speech Translator.");
+            recognizedString = "Starting Speech Translator.";
             await translator.StartContinuousRecognitionAsync().ConfigureAwait(false);
 
             recognizedString = "Speech Translator is now running.";
@@ -362,6 +406,7 @@ public class SpeechRecognition : MonoBehaviour
     // "Recognized" events are fired when the utterance end was detected by the server
     private void RecognizedTranslationHandler(object sender, TranslationRecognitionEventArgs e)
     {
+        recognizedString = "RecogizedTranslationHandler() was reached.";
         if (e.Result.Reason == ResultReason.TranslatedSpeech)
         {
             Debug.Log($"RECOGNIZED: Text={e.Result.Text}");
