@@ -348,7 +348,7 @@ public class SpeechRecognition : MonoBehaviour
             if (translator != null)
             {
                 recognizedString = "translator was created";
-                //translator.Recognizing += RecognizingTranslationHandler;
+                translator.Recognizing += RecognizingTranslationHandler;
                 translator.Recognized += RecognizedTranslationHandler;
                 translator.SpeechStartDetected += SpeechStartDetectedHandler;
                 translator.SpeechEndDetected += SpeechEndDetectedHandler;
@@ -375,7 +375,6 @@ public class SpeechRecognition : MonoBehaviour
 
     #region Speech Translation event handlers
     // "Recognizing" events are fired every time we receive interim results during recognition (i.e. hypotheses)
-    /*
     private void RecognizingTranslationHandler(object sender, TranslationRecognitionEventArgs e)
     {
         if (e.Result.Reason == ResultReason.TranslatingSpeech)
@@ -392,7 +391,6 @@ public class SpeechRecognition : MonoBehaviour
             }
         }
     }
-    */
     // "Recognized" events are fired when the utterance end was detected by the server
     private void RecognizedTranslationHandler(object sender, TranslationRecognitionEventArgs e)
     {
@@ -489,7 +487,7 @@ public class SpeechRecognition : MonoBehaviour
         if (translator != null)
         {
             await translator.StopContinuousRecognitionAsync().ConfigureAwait(false);
-            //translator.Recognizing -= RecognizingTranslationHandler;
+            translator.Recognizing -= RecognizingTranslationHandler;
             translator.Recognized -= RecognizedTranslationHandler;
             translator.SpeechStartDetected -= SpeechStartDetectedHandler;
             translator.SpeechEndDetected -= SpeechEndDetectedHandler;
