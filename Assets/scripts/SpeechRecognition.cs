@@ -1,19 +1,12 @@
-//
-// Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
-//
-
-
-//using System.Collections;
-//using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
 using Microsoft.CognitiveServices.Speech;
-//using Microsoft.CognitiveServices.Speech.Audio;
+using Microsoft.CognitiveServices.Speech.Audio;
 using Microsoft.CognitiveServices.Speech.Translation;
-//using System.Threading.Tasks;
-//using System.Globalization;
+using System.Threading.Tasks;
+using System.Globalization;
 using System;
 //using System.Diagnostics;
 using TMPro;
@@ -71,11 +64,13 @@ public class SpeechRecognition : MonoBehaviour
     // Cognitive Services Speech objects used for Speech Recognition
     private SpeechRecognizer recognizer;
     private TranslationRecognizer translator;
+
     // The current language of origin is locked to English-US in this sample. Change this
     // to another region & language code to use a different origin language.
     // e.g. fr-fr, es-es, etc.
-    string fromLanguage = "en-us";
-    string defaultLanguage = "en_English";
+    string fromLanguage = "en-US";
+    string targetLanguage = "en-US";
+    //string defaultLanguage = "en_English";
 
     private bool micPermissionGranted = false;
 #if PLATFORM_ANDROID
@@ -279,6 +274,7 @@ public class SpeechRecognition : MonoBehaviour
     }
     #endregion
 
+    /*
     public void changeTargetLanguage()
     {
         SpeechTranslationConfig config = SpeechTranslationConfig.FromSubscription(SpeechServiceAPIKey, SpeechServiceRegion);
@@ -294,75 +290,7 @@ public class SpeechRecognition : MonoBehaviour
 
         config.AddTargetLanguage(ExtractLanguageCode(value));
     }
-    /// <summary>
-    /// Creates a class-level Translation Recognizer for a specific language using Azure credentials
-    /// and hooks-up lifecycle & recognition events. Translation can be enabled with one or more target
-    /// languages translated simultaneously
-    /// </summary>
-    void CreateTranslationRecognizer()
-    {
-        Debug.Log("Creating Translation Recognizer.");
-        recognizedString = "Initializing speech recognition with translation, please wait...";
-
-        if (translator == null)
-        {   
-            SpeechTranslationConfig config = SpeechTranslationConfig.FromSubscription(SpeechServiceAPIKey, SpeechServiceRegion);
-            config.SpeechRecognitionLanguage = fromLanguage;
-
-            //Assuming the first option is selected by default, so it should never be null.
-            //get the selected index
-            int menuIndex = LanguageDropdown.GetComponent<Dropdown>().value;
-
-            //get all options available wit$$anonymous$$n t$$anonymous$$s dropdown menu
-            List<Dropdown.OptionData> menuOptions = LanguageDropdown.GetComponent<Dropdown>().options;
-
-            //get the string value of the selected index
-            string value = menuOptions[menuIndex].text;
-
-            recognizedString = "the language selected is: " + value;
-            config.AddTargetLanguage(ExtractLanguageCode(value));
-
-
-            /* Commenting out because we are assuming the first selection will be selected (en_English)
-            if (LanguageDropdown.captionText.text.Length > 0)
-            {
-                recognizedString = LanguageDropdown.captionText.text;
-                config.AddTargetLanguage(ExtractLanguageCode(LanguageDropdown.captionText.text));
-            }
-            else
-            {
-                config.AddTargetLanguage(ExtractLanguageCode(defaultLanguage));
-            }
-            */
-
-            translator = new TranslationRecognizer(config);
-
-            if (translator != null)
-            {
-                recognizedString = "translator was created";
-                translator.Recognizing += RecognizingTranslationHandler;
-                translator.Recognized += RecognizedTranslationHandler;
-                translator.SpeechStartDetected += SpeechStartDetectedHandler;
-                translator.SpeechEndDetected += SpeechEndDetectedHandler;
-                translator.Canceled += CanceledTranslationHandler;
-                translator.SessionStarted += SessionStartedHandler;
-                translator.SessionStopped += SessionStoppedHandler;
-            }
-        }
-        Debug.Log("CreateTranslationRecognizer exit");
-        recognizedString = "CreateTranslationRecognizer exit";
-    }
-
-    /// <summary>
-    /// Extract the language code from the enum used to populate the droplists.
-    /// Assumes that an underscore "_" is used as a separator in the enum name.
-    /// </summary>
-    /// <param name="languageListLabel"></param>
-    /// <returns></returns>
-    string ExtractLanguageCode(string languageListLabel)
-    {
-        return languageListLabel.Substring(0, languageListLabel.IndexOf("_"));
-    }
+    */
 
     /// <summary>
     /// Initiate continuous speech recognition from the default microphone, including live translation.
@@ -377,15 +305,77 @@ public class SpeechRecognition : MonoBehaviour
             Debug.Log("Starting Speech Translator.");
             recognizedString = "Starting Speech Translator.";
             await translator.StartContinuousRecognitionAsync().ConfigureAwait(false);
-
-            recognizedString = "Speech Translator is now running.";
+            if (translator != null)
+                recognizedString = "Speech Translator is now running.";
+            else
+                recognizedString = "translator is null but running";
             Debug.Log("Speech Translator is now running.");
         }
         Debug.Log("Start Continuous Speech Translation exit");
     }
 
+    /// <summary>
+    /// Creates a class-level Translation Recognizer for a specific language using Azure credentials
+    /// and hooks-up lifecycle & recognition events. Translation can be enabled with one or more target
+    /// languages translated simultaneously
+    /// </summary>
+    void CreateTranslationRecognizer()
+    {
+        Debug.Log("Creating Translation Recognizer.");
+        recognizedString = "Initializing speech recognition with translation, please wait...";
+
+        if (translator == null)
+        {
+
+            SpeechTranslationConfig config = SpeechTranslationConfig.FromSubscription(SpeechServiceAPIKey, SpeechServiceRegion);
+            
+            //Assuming the first option is selected by default, so it should never be null.
+            //get the selected index
+            //int menuIndex = LanguageDropdown.value;
+            //get all options available wit$$anonymous$$n t$$anonymous$$s dropdown menu
+            //List<TMP_Dropdown.OptionData> menuOptions = LanguageDropdown.options;            
+            //get the string value of the selected index
+            //string value = menuOptions[menuIndex].text;
+                        //The language we are hearing                                                               THIS WILL BE CHANGED TO THE LANG WE HEAR
+            config.SpeechRecognitionLanguage = "ar-LB";
+
+            //The language we want to see
+            config.AddTargetLanguage("en");//ExtractLanguageCode("en"));                                //THIS NEEDS TO BE TARGETLANGUAGE
+
+            
+            translator = new TranslationRecognizer(config);
+           
+            if (translator != null)
+            {
+                recognizedString = "translator was created";
+                //translator.Recognizing += RecognizingTranslationHandler;
+                translator.Recognized += RecognizedTranslationHandler;
+                translator.SpeechStartDetected += SpeechStartDetectedHandler;
+                translator.SpeechEndDetected += SpeechEndDetectedHandler;
+                translator.Canceled += CanceledTranslationHandler;
+                translator.SessionStarted += SessionStartedHandler;
+                translator.SessionStopped += SessionStoppedHandler;
+            }
+        }
+        Debug.Log("CreateTranslationRecognizer exit");
+    }
+
+    /// <summary>
+    /// Extract the language code from the enum used to populate the droplists.
+    /// Assumes that an underscore "_" is used as a separator in the enum name.
+    /// </summary>
+    /// <param name="languageListLabel"></param>
+    /// <returns></returns>
+    string ExtractLanguageCode(string languageListLabel)
+    {
+        return languageListLabel.Substring(0, languageListLabel.IndexOf("_"));
+    }
+
+    
+
     #region Speech Translation event handlers
     // "Recognizing" events are fired every time we receive interim results during recognition (i.e. hypotheses)
+    /*
     private void RecognizingTranslationHandler(object sender, TranslationRecognitionEventArgs e)
     {
         if (e.Result.Reason == ResultReason.TranslatingSpeech)
@@ -402,7 +392,7 @@ public class SpeechRecognition : MonoBehaviour
             }
         }
     }
-
+    */
     // "Recognized" events are fired when the utterance end was detected by the server
     private void RecognizedTranslationHandler(object sender, TranslationRecognitionEventArgs e)
     {
@@ -499,7 +489,7 @@ public class SpeechRecognition : MonoBehaviour
         if (translator != null)
         {
             await translator.StopContinuousRecognitionAsync().ConfigureAwait(false);
-            translator.Recognizing -= RecognizingTranslationHandler;
+            //translator.Recognizing -= RecognizingTranslationHandler;
             translator.Recognized -= RecognizedTranslationHandler;
             translator.SpeechStartDetected -= SpeechStartDetectedHandler;
             translator.SpeechEndDetected -= SpeechEndDetectedHandler;
