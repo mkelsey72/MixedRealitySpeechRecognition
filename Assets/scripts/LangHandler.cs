@@ -2,17 +2,15 @@ using UnityEngine;
 
 public class LangHandler : MonoBehaviour
 {
-    [SerializeField] GameObject btnToggle, panel, btnClosePanel;
-
-    public void showMenu()
+    [SerializeField] GameObject canvas;
+    
+    public void openCanvas()
     {
-
+        canvas.SetActive(true);
     }
 
-    public void closePanel()
+    public void closeCanvas()
     {
-
+        canvas.SetActive(false);
     }
-
-
 }

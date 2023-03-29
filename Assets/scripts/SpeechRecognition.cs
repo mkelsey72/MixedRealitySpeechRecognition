@@ -40,6 +40,7 @@ public class SpeechRecognition : MonoBehaviour
 
     [Tooltip("Streamwriter object used below to document sessions.")]
     StreamWriter sw;
+    string docPath;
 
     // Dropdown lists used to select translation languages, if enabled
     public Toggle TranslationEnabled;
@@ -71,7 +72,7 @@ public class SpeechRecognition : MonoBehaviour
     string inputLanguage = "en-US";
     string outputLanguage = "en";
 
-    string[] langCodes = { "ar-LB", "zh-Hans", "nl-NL", "fr-FR", "de-DE", "hi-IN", "it-IT", "ja-JP", "ko-KR", "ru-RU", "es-US", "uk-UA" };
+    string[] langCodes = { "en-US", "ar-LB", "zh-Hans", "nl-NL", "fr-FR", "de-DE", "hi-IN", "it-IT", "ja-JP", "ko-KR", "ru-RU", "es-US", "uk-UA" };
 
     private bool micPermissionGranted = false;
 #if PLATFORM_ANDROID
@@ -100,6 +101,11 @@ public class SpeechRecognition : MonoBehaviour
 #endif
     }
 
+    public void documentSession()
+    {
+        recordSession = true;
+    }
+
     /// <summary>
     /// Attach to button component used to launch continuous recognition (with or without translation)
     /// </summary>
@@ -108,6 +114,23 @@ public class SpeechRecognition : MonoBehaviour
         errorString = "";
         if (micPermissionGranted)
         {
+            if (recordSession)
+            {
+                string docPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                //string path = @"C:\Documents\MRS_Recordings.txt";
+                //CreateText should open the file if it exists
+                //using (sw = File.CreateText(path))
+                //{
+                //sw.WriteLine("\n --------- Beginning of Session --------- \n");  
+                //}     
+                
+                using (StreamWriter outputFile = new StreamWriter(Path.Combine(docPath, "MRS_Documents.txt"), true))
+                {
+                    outputFile.WriteAsync("\n --------- Beginning of Session --------- \n");
+                }              
+                
+            }
+
             if (TranslationEnabled.isOn)
             {
                 StartContinuousTranslation();
@@ -161,17 +184,6 @@ public class SpeechRecognition : MonoBehaviour
             }
         }
         Debug.Log("CreateSpeechRecognizer exit");
-
-        if (recordSession)
-        {
-            string path = @"C:\Documents\Session.txt";
-            sw = File.CreateText(path);
-            //below might be causing inf loop? shouldn't, but.
-            //using (sw = File.CreateText(path))
-            //{            
-            sw.WriteLine("\n --------- Beginning of Session --------- \n");
-            //}
-        }
     }
 
     /// <summary>
@@ -189,18 +201,6 @@ public class SpeechRecognition : MonoBehaviour
 
             recognizedString = "Speech Recognizer is now running.";
             Debug.Log("Speech Recognizer is now running.");
-
-            //Creating a file, or opening a file if it already exists, to store result strings and document session
-            if (recordSession)
-            {
-                string path = @"c:\Documents\Session.txt";
-                sw = File.CreateText(path);
-                //below might be causing inf loop? shouldn't, but.
-                //using (sw = File.CreateText(path))
-                //{            
-                sw.WriteLine("\n --------- Beginning of Session --------- \n");
-                //}
-            }
         }
         Debug.Log("Start Continuous Speech Recognition exit");
     }
@@ -250,8 +250,14 @@ public class SpeechRecognition : MonoBehaviour
             lock (threadLocker)
             {
                 recognizedString = $"RESULT: {Environment.NewLine}{e.Result.Text}";
-
-                sw.Write(e.Result.Text);
+                if (recordSession)
+                {
+                    using (StreamWriter outputFile = new StreamWriter(Path.Combine(docPath, "MRS_Documents.txt"), true))
+                    {
+                        outputFile.WriteAsync($"{Environment.NewLine}{e.Result.Text}");
+                    }
+                    //sw.Write($"{Environment.NewLine}{e.Result.Text}");
+                }
             }
         }
         else if (e.Result.Reason == ResultReason.NoMatch)
@@ -274,19 +280,6 @@ public class SpeechRecognition : MonoBehaviour
         }
     }
     #endregion
-    /*
-    //Called when dropdown selection changes
-    public void changeTargetLanguage()
-    {
-        //SpeechTranslationConfig config = SpeechTranslationConfig.FromSubscription(SpeechServiceAPIKey, SpeechServiceRegion);
-
-        int menuIndex = LanguageDropdown.GetComponent<Dropdown>().value;
-
-        inputLanguage = langCodes[menuIndex];
-        //config.AddTargetLanguage(ExtractLanguageCode(langCodes[menuIndex]));
-
-    }
-    */
     /// <summary>
     /// Initiate continuous speech recognition from the default microphone, including live translation.
     /// </summary>
@@ -319,23 +312,13 @@ public class SpeechRecognition : MonoBehaviour
 
         if (translator == null)
         {
-
             SpeechTranslationConfig config = SpeechTranslationConfig.FromSubscription(SpeechServiceAPIKey, SpeechServiceRegion);
-
-            //Assuming the first option is selected by default, so it should never be null.
-            //get the selected index
-            //int menuIndex = LanguageDropdown.value;
-            //get all options available wit$$anonymous$$n t$$anonymous$$s dropdown menu
-            //List<TMP_Dropdown.OptionData> menuOptions = LanguageDropdown.options;            
-            //get the string value of the selected index
-            //string value = menuOptions[menuIndex].text;
-            //The language we are hearing
             
             int menuIndex = LanguageDropdown.value;
             inputLanguage = langCodes[menuIndex];
             
-            //THIS WILL BE CHANGED TO THE LANG WE HEAR
-            config.SpeechRecognitionLanguage = inputLanguage; // -LB";
+            //The language we hear
+            config.SpeechRecognitionLanguage = inputLanguage;
 
             //The language we want to see
             config.AddTargetLanguage(outputLanguage);
@@ -356,13 +339,6 @@ public class SpeechRecognition : MonoBehaviour
         Debug.Log("CreateTranslationRecognizer exit");
     }
 
-    /// <summary>
-    /// Extract the language code from the enum used to populate the droplists.
-    /// Assumes that an underscore "_" is used as a separator in the enum name.
-    /// </summary>
-    /// <param name="languageListLabel"></param>
-    /// <returns></returns>    
-
     #region Speech Translation event handlers
     // "Recognizing" events are fired every time we receive interim results during recognition (i.e. hypotheses)
     private void RecognizingTranslationHandler(object sender, TranslationRecognitionEventArgs e)
@@ -376,7 +352,7 @@ public class SpeechRecognition : MonoBehaviour
                // recognizedString += $"{Environment.NewLine}TRANSLATED HYPOTHESESE:";
                 foreach (var element in e.Result.Translations)
                 {
-                    recognizedString += $"{Environment.NewLine}[{element.Key}]: {element.Value}";
+                    //recognizedString += $"{Environment.NewLine}[{element.Key}]: {element.Value}";
                 }
             }
         }
@@ -393,7 +369,15 @@ public class SpeechRecognition : MonoBehaviour
                 //recognizedString += $"{Environment.NewLine}TRANSLATED RESULTS:";
                 foreach (var element in e.Result.Translations)
                 {
-                    recognizedString += $"{Environment.NewLine}[{element.Key}]: {element.Value}";
+                    recognizedString = $"{Environment.NewLine} {element.Value}";
+                    if (recordSession)
+                    {
+                        using (StreamWriter outputFile = new StreamWriter(Path.Combine(docPath, "MRS_Documents.txt"), true))
+                        {
+                            outputFile.WriteAsync($"{Environment.NewLine} {element.Value}");
+                        }
+                        //sw.Write($"{Environment.NewLine}: {element.Value}");
+                    }
                 }
             }
         }
