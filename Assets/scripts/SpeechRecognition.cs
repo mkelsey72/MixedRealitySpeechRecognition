@@ -68,9 +68,10 @@ public class SpeechRecognition : MonoBehaviour
     // The current language of origin is locked to English-US in this sample. Change this
     // to another region & language code to use a different origin language.
     // e.g. fr-fr, es-es, etc.
-    string fromLanguage = "en-US";
-    string targetLanguage = "en-US";
-    //string defaultLanguage = "en_English";
+    string inputLanguage = "en-US";
+    string outputLanguage = "en";
+
+    string[] langCodes = { "ar-LB", "zh-Hans", "nl-NL", "fr-FR", "de-DE", "hi-IN", "it-IT", "ja-JP", "ko-KR", "ru-RU", "es-US", "uk-UA" };
 
     private bool micPermissionGranted = false;
 #if PLATFORM_ANDROID
@@ -144,7 +145,7 @@ public class SpeechRecognition : MonoBehaviour
         if (recognizer == null)
         {
             SpeechConfig config = SpeechConfig.FromSubscription(SpeechServiceAPIKey, SpeechServiceRegion);
-            config.SpeechRecognitionLanguage = fromLanguage;
+            config.SpeechRecognitionLanguage = inputLanguage;
             recognizer = new SpeechRecognizer(config);
 
             if (recognizer != null)
@@ -273,25 +274,19 @@ public class SpeechRecognition : MonoBehaviour
         }
     }
     #endregion
-
     /*
+    //Called when dropdown selection changes
     public void changeTargetLanguage()
     {
-        SpeechTranslationConfig config = SpeechTranslationConfig.FromSubscription(SpeechServiceAPIKey, SpeechServiceRegion);
-        //Assuming the first option is selected by default, so it should never be null.
-        //get the selected index
+        //SpeechTranslationConfig config = SpeechTranslationConfig.FromSubscription(SpeechServiceAPIKey, SpeechServiceRegion);
+
         int menuIndex = LanguageDropdown.GetComponent<Dropdown>().value;
 
-        //get all options available wit$$anonymous$$n t$$anonymous$$s dropdown menu
-        List<Dropdown.OptionData> menuOptions = LanguageDropdown.GetComponent<Dropdown>().options;
+        inputLanguage = langCodes[menuIndex];
+        //config.AddTargetLanguage(ExtractLanguageCode(langCodes[menuIndex]));
 
-        //get the string value of the selected index
-        string value = menuOptions[menuIndex].text;
-
-        config.AddTargetLanguage(ExtractLanguageCode(value));
     }
     */
-
     /// <summary>
     /// Initiate continuous speech recognition from the default microphone, including live translation.
     /// </summary>
@@ -305,10 +300,8 @@ public class SpeechRecognition : MonoBehaviour
             Debug.Log("Starting Speech Translator.");
             recognizedString = "Starting Speech Translator.";
             await translator.StartContinuousRecognitionAsync().ConfigureAwait(false);
-            if (translator != null)
-                recognizedString = "Speech Translator is now running.";
-            else
-                recognizedString = "translator is null but running";
+            recognizedString = "Speech Translator is now running.";
+
             Debug.Log("Speech Translator is now running.");
         }
         Debug.Log("Start Continuous Speech Translation exit");
@@ -328,7 +321,7 @@ public class SpeechRecognition : MonoBehaviour
         {
 
             SpeechTranslationConfig config = SpeechTranslationConfig.FromSubscription(SpeechServiceAPIKey, SpeechServiceRegion);
-            
+
             //Assuming the first option is selected by default, so it should never be null.
             //get the selected index
             //int menuIndex = LanguageDropdown.value;
@@ -336,18 +329,21 @@ public class SpeechRecognition : MonoBehaviour
             //List<TMP_Dropdown.OptionData> menuOptions = LanguageDropdown.options;            
             //get the string value of the selected index
             //string value = menuOptions[menuIndex].text;
-                        //The language we are hearing                                                               THIS WILL BE CHANGED TO THE LANG WE HEAR
-            config.SpeechRecognitionLanguage = "ar-LB";
+            //The language we are hearing
+            
+            int menuIndex = LanguageDropdown.value;
+            inputLanguage = langCodes[menuIndex];
+            
+            //THIS WILL BE CHANGED TO THE LANG WE HEAR
+            config.SpeechRecognitionLanguage = inputLanguage; // -LB";
 
             //The language we want to see
-            config.AddTargetLanguage("en");//ExtractLanguageCode("en"));                                //THIS NEEDS TO BE TARGETLANGUAGE
-
+            config.AddTargetLanguage(outputLanguage);
             
             translator = new TranslationRecognizer(config);
            
             if (translator != null)
             {
-                recognizedString = "translator was created";
                 translator.Recognizing += RecognizingTranslationHandler;
                 translator.Recognized += RecognizedTranslationHandler;
                 translator.SpeechStartDetected += SpeechStartDetectedHandler;
@@ -365,13 +361,7 @@ public class SpeechRecognition : MonoBehaviour
     /// Assumes that an underscore "_" is used as a separator in the enum name.
     /// </summary>
     /// <param name="languageListLabel"></param>
-    /// <returns></returns>
-    string ExtractLanguageCode(string languageListLabel)
-    {
-        return languageListLabel.Substring(0, languageListLabel.IndexOf("_"));
-    }
-
-    
+    /// <returns></returns>    
 
     #region Speech Translation event handlers
     // "Recognizing" events are fired every time we receive interim results during recognition (i.e. hypotheses)
@@ -382,8 +372,8 @@ public class SpeechRecognition : MonoBehaviour
             Debug.Log($"RECOGNIZED HYPOTHESIS: Text={e.Result.Text}");
             lock (threadLocker)
             {
-                recognizedString = $"RECOGNIZED HYPOTHESIS ({fromLanguage}): {Environment.NewLine}{e.Result.Text}";
-                recognizedString += $"{Environment.NewLine}TRANSLATED HYPOTHESESE:";
+               // recognizedString = $"RECOGNIZED HYPOTHESIS ({inputLanguage}): {Environment.NewLine}{e.Result.Text}";
+               // recognizedString += $"{Environment.NewLine}TRANSLATED HYPOTHESESE:";
                 foreach (var element in e.Result.Translations)
                 {
                     recognizedString += $"{Environment.NewLine}[{element.Key}]: {element.Value}";
@@ -394,14 +384,13 @@ public class SpeechRecognition : MonoBehaviour
     // "Recognized" events are fired when the utterance end was detected by the server
     private void RecognizedTranslationHandler(object sender, TranslationRecognitionEventArgs e)
     {
-        recognizedString = "RecogizedTranslationHandler() was reached.";
         if (e.Result.Reason == ResultReason.TranslatedSpeech)
         {
             Debug.Log($"RECOGNIZED: Text={e.Result.Text}");
             lock (threadLocker)
             {
-                recognizedString = $"RECOGNIZED RESULT ({fromLanguage}): {Environment.NewLine}{e.Result.Text}";
-                recognizedString += $"{Environment.NewLine}TRANSLATED RESULTS:";
+               // recognizedString = $"RECOGNIZED RESULT ({inputLanguage}): {Environment.NewLine}{e.Result.Text}";
+                //recognizedString += $"{Environment.NewLine}TRANSLATED RESULTS:";
                 foreach (var element in e.Result.Translations)
                 {
                     recognizedString += $"{Environment.NewLine}[{element.Key}]: {element.Value}";

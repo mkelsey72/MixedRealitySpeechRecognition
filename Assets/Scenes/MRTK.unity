@@ -2031,9 +2031,9 @@ RectTransform:
   m_Father: {fileID: 1208477795}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 10, y: -10}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -101.6, y: 1.4}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &393228111
@@ -8146,8 +8146,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 124.52, y: -115.405}
-  m_SizeDelta: {x: 209.04, y: 12.31}
+  m_AnchoredPosition: {x: 123.46999, y: -39.8}
+  m_SizeDelta: {x: 206.93999, y: 12.31}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1208477796
 MonoBehaviour:
@@ -12353,17 +12353,17 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1850971755}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -6.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1208477795}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 9, y: -0.49999952}
-  m_SizeDelta: {x: -28, y: -3}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -123.8, y: 1.3100009}
+  m_SizeDelta: {x: 181.04001, y: 18}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1850971757
 MonoBehaviour:
@@ -12378,7 +12378,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -12398,7 +12398,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Translate
+  m_Text: 'Translation On:'
 --- !u!222 &1850971758
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -14574,31 +14574,45 @@ MonoBehaviour:
   m_Value: 0
   m_Options:
     m_Options:
-    - m_Text: en_English
+    - m_Text: Arabic
       m_Image: {fileID: 0}
-    - m_Text: ar_Arabic
+    - m_Text: Chinese
       m_Image: {fileID: 0}
-    - m_Text: zh_Chinese_Mandarin
+    - m_Text: Dutch
       m_Image: {fileID: 0}
-    - m_Text: nl_Dutch
+    - m_Text: French
       m_Image: {fileID: 0}
-    - m_Text: zh_Chinese_Mandarin
+    - m_Text: German
       m_Image: {fileID: 0}
-    - m_Text: fr_French
+    - m_Text: Hindi
       m_Image: {fileID: 0}
-    - m_Text: de_German
+    - m_Text: Italian
       m_Image: {fileID: 0}
-    - m_Text: it_Italian
+    - m_Text: Japanese
       m_Image: {fileID: 0}
-    - m_Text: ja_Japanese
+    - m_Text: Korean
       m_Image: {fileID: 0}
-    - m_Text: it_Italian
+    - m_Text: Russian
       m_Image: {fileID: 0}
-    - m_Text: ko_Korean
+    - m_Text: Spanish
+      m_Image: {fileID: 0}
+    - m_Text: Ukrainian
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1423229517}
+        m_TargetAssemblyTypeName: SpeechRecognition, Assembly-CSharp
+        m_MethodName: changeTargetLanguage
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_AlphaFadeSpeed: 0.15
 --- !u!114 &114628498227762595
 MonoBehaviour:
@@ -14949,7 +14963,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: en_English
+  m_text: Arabic
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: afc8299d5d5bbd440a0616c8ecbc7217, type: 2}
   m_sharedMaterial: {fileID: 21340371490990018, guid: afc8299d5d5bbd440a0616c8ecbc7217, type: 2}
@@ -15576,7 +15590,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: -17}
+  m_SizeDelta: {x: 0, y: 0.000015259}
   m_Pivot: {x: 0, y: 1}
 --- !u!224 &224092901691207399
 RectTransform:
@@ -15698,8 +15712,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 124.52, y: -30}
-  m_SizeDelta: {x: 209.04, y: 20}
+  m_AnchoredPosition: {x: 123.46999, y: -91.3}
+  m_SizeDelta: {x: 206.93999, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224471350915701695
 RectTransform:
@@ -15925,8 +15939,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 124.52, y: -74.625}
-  m_SizeDelta: {x: 209.04, y: 29.25}
+  m_AnchoredPosition: {x: 123.46999, y: -120.2}
+  m_SizeDelta: {x: 206.93999, y: 29.25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &224638708410373272
 MonoBehaviour:
@@ -16049,7 +16063,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0.000005526468}
-  m_SizeDelta: {x: 0, y: 141.56}
+  m_SizeDelta: {x: -2.1, y: 141.56}
   m_Pivot: {x: 0, y: 1}
 --- !u!224 &224822621875792147
 RectTransform:
@@ -16068,7 +16082,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -7.5, y: -0.50000095}
+  m_AnchoredPosition: {x: -7.5, y: -0.5}
   m_SizeDelta: {x: -35, y: -13}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224828945473393483
@@ -16150,8 +16164,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -0.056884766, y: 0.3596}
-  m_SizeDelta: {x: 249.04, y: 154.4897}
+  m_AnchoredPosition: {x: -0.056884766, y: 0.3533}
+  m_SizeDelta: {x: 249.04, y: 251.4548}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &231535692383496732
 MonoBehaviour:
