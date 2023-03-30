@@ -11,6 +11,7 @@ using System;
 //using System.Diagnostics;
 using TMPro;
 using System.Collections.Generic;
+using System.Text;
 #if PLATFORM_ANDROID
 using UnityEngine.Android;
 #endif
@@ -39,8 +40,7 @@ public class SpeechRecognition : MonoBehaviour
     public static bool recordSession;
 
     [Tooltip("Streamwriter object used below to document sessions.")]
-    StreamWriter sw;
-    string docPath;
+    private string path;
 
     // Dropdown lists used to select translation languages, if enabled
     public Toggle TranslationEnabled;
@@ -83,7 +83,8 @@ public class SpeechRecognition : MonoBehaviour
 
     private void Awake()
     {
-
+        //creating file initially
+        path = Path.Combine(Application.persistentDataPath, "MRS_Documents.txt");
     }
 
     private void Start()
@@ -116,19 +117,12 @@ public class SpeechRecognition : MonoBehaviour
         {
             if (recordSession)
             {
-                string docPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                //string path = @"C:\Documents\MRS_Recordings.txt";
-                //CreateText should open the file if it exists
-                //using (sw = File.CreateText(path))
-                //{
-                //sw.WriteLine("\n --------- Beginning of Session --------- \n");  
-                //}     
-                
-                using (StreamWriter outputFile = new StreamWriter(Path.Combine(docPath, "MRS_Documents.txt"), true))
+                //File.Append opens the file if it exists, creates if it does not.
+                using (FileStream writer = File.Open(path, FileMode.Append))
                 {
-                    outputFile.WriteAsync("\n --------- Beginning of Session --------- \n");
-                }              
-                
+                    Byte[] content = new UTF8Encoding(true).GetBytes("-------------- Beginning of Session --------------");
+                    writer.Write(content, 0, content.Length);
+                }                         
             }
 
             if (TranslationEnabled.isOn)
@@ -250,13 +244,14 @@ public class SpeechRecognition : MonoBehaviour
             lock (threadLocker)
             {
                 recognizedString = $"RESULT: {Environment.NewLine}{e.Result.Text}";
+
                 if (recordSession)
                 {
-                    using (StreamWriter outputFile = new StreamWriter(Path.Combine(docPath, "MRS_Documents.txt"), true))
+                    using (FileStream writer = File.Open(path, FileMode.Append))
                     {
-                        outputFile.WriteAsync($"{Environment.NewLine}{e.Result.Text}");
+                        Byte[] content = new UTF8Encoding(true).GetBytes($"{Environment.NewLine}{e.Result.Text}");
+                        writer.Write(content, 0, content.Length);
                     }
-                    //sw.Write($"{Environment.NewLine}{e.Result.Text}");
                 }
             }
         }
@@ -349,10 +344,10 @@ public class SpeechRecognition : MonoBehaviour
             lock (threadLocker)
             {
                // recognizedString = $"RECOGNIZED HYPOTHESIS ({inputLanguage}): {Environment.NewLine}{e.Result.Text}";
-               // recognizedString += $"{Environment.NewLine}TRANSLATED HYPOTHESESE:";
+                recognizedString += $"{Environment.NewLine}TRANSLATED HYPOTHESESE:";
                 foreach (var element in e.Result.Translations)
                 {
-                    //recognizedString += $"{Environment.NewLine}[{element.Key}]: {element.Value}";
+                    recognizedString += $"{Environment.NewLine} {element.Value}";
                 }
             }
         }
@@ -372,11 +367,11 @@ public class SpeechRecognition : MonoBehaviour
                     recognizedString = $"{Environment.NewLine} {element.Value}";
                     if (recordSession)
                     {
-                        using (StreamWriter outputFile = new StreamWriter(Path.Combine(docPath, "MRS_Documents.txt"), true))
+                        using (FileStream writer = File.Open(path, FileMode.Append))
                         {
-                            outputFile.WriteAsync($"{Environment.NewLine} {element.Value}");
+                            Byte[] content = new UTF8Encoding(true).GetBytes($"{Environment.NewLine} {element.Value}");
+                            writer.Write(content, 0, content.Length);
                         }
-                        //sw.Write($"{Environment.NewLine}: {element.Value}");
                     }
                 }
             }
@@ -471,12 +466,6 @@ public class SpeechRecognition : MonoBehaviour
             translator = null;
             recognizedString = "Speech Translator is now stopped.";
             Debug.Log("Speech Translator is now stopped.");
-        }
-
-        if (recordSession)
-        {
-            sw.WriteLine("\n ------ End of Session ------ \n");
-            sw.Close();
         }
     }
 }
