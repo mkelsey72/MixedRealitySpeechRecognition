@@ -72,7 +72,7 @@ public class SpeechRecognition : MonoBehaviour
     string inputLanguage = "en-US";
     string outputLanguage = "en";
 
-    string[] langCodes = { "en-US", "ar-LB", "zh-Hans", "nl-NL", "fr-FR", "de-DE", "hi-IN", "it-IT", "ja-JP", "ko-KR", "ru-RU", "es-US", "uk-UA" };
+    string[] langCodes = { "ar-LB", "zh-Hans", "nl-NL", "fr-FR", "de-DE", "hi-IN", "it-IT", "ja-JP", "ko-KR", "ru-RU", "es-US", "uk-UA" };
 
     private bool micPermissionGranted = false;
 #if PLATFORM_ANDROID
@@ -245,6 +245,7 @@ public class SpeechRecognition : MonoBehaviour
             {
                 recognizedString = $"RESULT: {Environment.NewLine}{e.Result.Text}";
 
+                /*
                 if (recordSession)
                 {
                     using (FileStream writer = File.Open(path, FileMode.Append))
@@ -253,6 +254,7 @@ public class SpeechRecognition : MonoBehaviour
                         writer.Write(content, 0, content.Length);
                     }
                 }
+                */
             }
         }
         else if (e.Result.Reason == ResultReason.NoMatch)
@@ -311,7 +313,7 @@ public class SpeechRecognition : MonoBehaviour
             
             int menuIndex = LanguageDropdown.value;
             inputLanguage = langCodes[menuIndex];
-            
+
             //The language we hear
             config.SpeechRecognitionLanguage = inputLanguage;
 
@@ -344,10 +346,10 @@ public class SpeechRecognition : MonoBehaviour
             lock (threadLocker)
             {
                // recognizedString = $"RECOGNIZED HYPOTHESIS ({inputLanguage}): {Environment.NewLine}{e.Result.Text}";
-                recognizedString += $"{Environment.NewLine}TRANSLATED HYPOTHESESE:";
+                // recognizedString += $"{Environment.NewLine}TRANSLATED HYPOTHESESE:";
                 foreach (var element in e.Result.Translations)
                 {
-                    recognizedString += $"{Environment.NewLine} {element.Value}";
+                    // recognizedString += $"{Environment.NewLine} {element.Value}";
                 }
             }
         }
@@ -365,6 +367,7 @@ public class SpeechRecognition : MonoBehaviour
                 foreach (var element in e.Result.Translations)
                 {
                     recognizedString = $"{Environment.NewLine} {element.Value}";
+                    /*
                     if (recordSession)
                     {
                         using (FileStream writer = File.Open(path, FileMode.Append))
@@ -373,6 +376,7 @@ public class SpeechRecognition : MonoBehaviour
                             writer.Write(content, 0, content.Length);
                         }
                     }
+                    */
                 }
             }
         }
