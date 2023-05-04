@@ -17,7 +17,7 @@ The application uses Microsoft Azure's Speech-To-Text Translation API and was de
 - Addition of ASL images instead of, or accompanying, the captions. Some research shows that individuals with hearing impairment have an easier time understanding ASL compared to written text.
 - Light/Dark Mode. There is currently an option for light/dark mode, but it does not work because of opacity issues with MRTK.
 - Record captions or translation subtitles to a document for later reference. 
-   - Time stamp feature for the document, incase user can't keep up with captions.
+   - Time stamp feature for the document, incase user can't keep up with captions and would like to reference later.
 
 ## Notes:
 - When deploying the application via Visual Studio 2022, I used the following settings:
