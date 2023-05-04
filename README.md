@@ -23,7 +23,7 @@ The application uses Microsoft Azure's Speech-To-Text Translation API and was de
 - When deploying the application via Visual Studio 2022, I used the following settings:
 > - Solution Configurations: Release (Master would work as well)
 > - Solution Platforms: ARM64
-- In Unity, you will be prompted to update the version of the project. Do not do this unless you are in a new branch trying to fix the issue, it will not update correctly otherwise. Skip the update.
+- In Unity, you will be prompted to update the version of the project. Do not do this unless you are in a new branch trying to fix the issue, it will not update correctly otherwise. Skip the update and just run the old version.
 
 ### Research Poster and Explanation (Speech Recognition Only): <!-- this needs to be a better title -->
 [SFA S.U.R.E.](https://www.sfasu.edu/academics/colleges/sciences-math/student-resources/undergraduate-research/sure)
