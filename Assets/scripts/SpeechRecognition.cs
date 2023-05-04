@@ -1,16 +1,10 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
 using Microsoft.CognitiveServices.Speech;
-using Microsoft.CognitiveServices.Speech.Audio;
 using Microsoft.CognitiveServices.Speech.Translation;
-using System.Threading.Tasks;
-using System.Globalization;
 using System;
-//using System.Diagnostics;
 using TMPro;
-using System.Collections.Generic;
 using System.Text;
 #if PLATFORM_ANDROID
 using UnityEngine.Android;
@@ -27,34 +21,20 @@ using Debug = UnityEngine.Debug;
 /// </summary>
 public class SpeechRecognition : MonoBehaviour
 {
-    // Public fields in the Unity inspector
+    #region Public fields in the Unity inspector
     [Tooltip("Unity UI Text component used to report potential errors on screen.")]
-    public Text RecognizedText;
+    public TextMeshProUGUI RecognizedText;
     [Tooltip("Unity UI Text component used to post recognition results on screen.")]
-    public Text ErrorText;
+    public TextMeshProUGUI ErrorText;
 
     [Tooltip("Text Mesh Pro - where subtitles appears")]
     public TextMeshProUGUI ResultText;
 
-    [Tooltip("Indicates if session should be documented or not.")]
-    public static bool recordSession;
-
-    [Tooltip("Streamwriter object used below to document sessions.")]
-    private string path;
-
-    // Dropdown lists used to select translation languages, if enabled
+    [Tooltip("Dropdown lists used to select translation languages, if enabled")]
     public Toggle TranslationEnabled;
 
     [Tooltip("Target language #1 for translation (if enabled).")]
     public TMP_Dropdown LanguageDropdown;
-
-    //public GameObject TranslationMenu;
-
-    // Used to show live messages on screen, must be locked to avoid threading deadlocks since
-    // the recognition events are raised in a separate thread
-    private string recognizedString = "";
-    private string errorString = "";
-    private System.Object threadLocker = new System.Object();
 
     // Speech recognition key, required
     [Tooltip("Connection string to Cognitive Services Speech.")]
@@ -62,19 +42,36 @@ public class SpeechRecognition : MonoBehaviour
     [Tooltip("Region for your Cognitive Services Speech instance (must match the key).")]
     public string SpeechServiceRegion = "westus";
 
+    #endregion
+
+    #region Private Attributes
+    // Used to show live messages on screen, must be locked to avoid threading deadlocks since
+    // the recognition events are raised in a separate thread
+    private string recognizedString = "";
+    private string errorString = "";
+    private System.Object threadLocker = new System.Object();
+    [Tooltip("Streamwriter object used below to document sessions.")]
+    private string path;
+
+    [Tooltip("Indicates if session should be documented or not.")]
+    public static bool recordSession;
+
     // Cognitive Services Speech objects used for Speech Recognition
     private SpeechRecognizer recognizer;
     private TranslationRecognizer translator;
 
-    // The current language of origin is locked to English-US in this sample. Change this
-    // to another region & language code to use a different origin language.
-    // e.g. fr-fr, es-es, etc.
-    string inputLanguage = "en-US";
-    string outputLanguage = "en";
+    // The current language of origin is locked to English-US for ~simplicity~.
+    [Tooltip("The language to translate FROM.")]
+    private string inputLanguage = "en-US";
+    [Tooltip("The language to translate TO.")]
+    private string outputLanguage = "en";
 
-    string[] langCodes = { "ar-LB", "zh-Hans", "nl-NL", "fr-FR", "de-DE", "hi-IN", "it-IT", "ja-JP", "ko-KR", "ru-RU", "es-US", "uk-UA" };
+    [Tooltip("Array of language codes - Indeces line up with LanguageDropdown.")]
+    private string[] langCodes = { "ar-LB", "zh-Hans", "nl-NL", "fr-FR", "de-DE", "hi-IN", "it-IT", "ja-JP", "ko-KR", "ru-RU", "es-US", "uk-UA" };
 
     private bool micPermissionGranted = false;
+    #endregion
+
 #if PLATFORM_ANDROID
     // Required to manifest microphone permission, cf.
     // https://docs.unity3d.com/Manual/android-manifest.html
@@ -83,7 +80,7 @@ public class SpeechRecognition : MonoBehaviour
 
     private void Awake()
     {
-        //creating file initially
+        // Creating file - This was for the feature of recording session captions/subtitles to a document. Does not work.
         path = Path.Combine(Application.persistentDataPath, "MRS_Documents.txt");
     }
 
@@ -102,13 +99,14 @@ public class SpeechRecognition : MonoBehaviour
 #endif
     }
 
+    // Method called by DiaDocSess object in Unity. Enables session recording.
     public void documentSession()
     {
         recordSession = true;
     }
 
     /// <summary>
-    /// Attach to button component used to launch continuous recognition (with or without translation)
+    /// Attached to button component used to launch continuous recognition (with or without translation)
     /// </summary>
     public void StartContinuous()
     {
@@ -117,7 +115,7 @@ public class SpeechRecognition : MonoBehaviour
         {
             if (recordSession)
             {
-                //File.Append opens the file if it exists, creates if it does not.
+                //File.Append opens the file if it exists, creates if it does not. - Doesn't work. But doesn't hurt ;).
                 using (FileStream writer = File.Open(path, FileMode.Append))
                 {
                     Byte[] content = new UTF8Encoding(true).GetBytes("-------------- Beginning of Session --------------");
@@ -277,6 +275,7 @@ public class SpeechRecognition : MonoBehaviour
         }
     }
     #endregion
+
     /// <summary>
     /// Initiate continuous speech recognition from the default microphone, including live translation.
     /// </summary>
@@ -311,13 +310,14 @@ public class SpeechRecognition : MonoBehaviour
         {
             SpeechTranslationConfig config = SpeechTranslationConfig.FromSubscription(SpeechServiceAPIKey, SpeechServiceRegion);
             
+            // Retrieving index of language chosen and retrieving language code for that language.
             int menuIndex = LanguageDropdown.value;
             inputLanguage = langCodes[menuIndex];
 
-            //The language we hear
+            //The language we hear and want to translate from
             config.SpeechRecognitionLanguage = inputLanguage;
 
-            //The language we want to see
+            //The language we want to see in the subtitles
             config.AddTargetLanguage(outputLanguage);
             
             translator = new TranslationRecognizer(config);
@@ -367,16 +367,6 @@ public class SpeechRecognition : MonoBehaviour
                 foreach (var element in e.Result.Translations)
                 {
                     recognizedString = $"{Environment.NewLine} {element.Value}";
-                    /*
-                    if (recordSession)
-                    {
-                        using (FileStream writer = File.Open(path, FileMode.Append))
-                        {
-                            Byte[] content = new UTF8Encoding(true).GetBytes($"{Environment.NewLine} {element.Value}");
-                            writer.Write(content, 0, content.Length);
-                        }
-                    }
-                    */
                 }
             }
         }
@@ -472,4 +462,7 @@ public class SpeechRecognition : MonoBehaviour
             Debug.Log("Speech Translator is now stopped.");
         }
     }
-}
+} // What is the most common lanuage used by programmers?
+#region Answer
+    // profanity.
+#endregion
