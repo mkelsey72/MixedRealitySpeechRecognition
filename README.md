@@ -7,7 +7,7 @@ This application accepts live audio from the user's environment, providing real-
 
 ![Lecture Demo](https://user-images.githubusercontent.com/105393865/236265964-67938660-ba15-437e-acc0-a05fbe9d3e21.png)
 
-### Translation Feature
+## Translation Feature
 
 The application now allows for translation as well. A user can select the language they wish to translate via an interactable drop down and when the recognition is run, it will translate to english. A toggle box will need to be checked by the user to run the transalator instead of the speech recognizer and unchecked to run the speech recognizer again.
 
